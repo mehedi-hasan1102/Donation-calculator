@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Donation Calculator | Charitable Contribution Tool</title>
+  <title>Donation Calculator</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -15,679 +15,204 @@
       --light-gray: #f8fafc;
       --border: #e2e8f0;
       --white: #ffffff;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      --transition: 0.3s ease;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-family: 'Inter', sans-serif;
       background-color: var(--light-gray);
-      color: var(--dark);
-      line-height: 1.6;
-      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      min-height: 100vh;
       padding: 20px;
     }
 
-    .container {
-      max-width: 1000px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    .calculator-wrapper {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 30px;
-      background-color: var(--white);
+    .calculator-container {
+      background: var(--white);
+      padding: 30px 40px;
       border-radius: 16px;
       box-shadow: var(--shadow-lg);
-      overflow: hidden;
+      max-width: 400px;
+      width: 100%;
       position: relative;
     }
 
-    /* Left Panel - Information */
-    .info-panel {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: var(--white);
-      padding: 40px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 30px;
-      font-weight: 600;
-      font-size: 1.2rem;
-    }
-
-    .logo i {
+    .calculator-container h2 {
       font-size: 1.5rem;
-    }
-
-    .info-content h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 15px;
-      line-height: 1.2;
-    }
-
-    .info-content p {
-      opacity: 0.9;
-      margin-bottom: 25px;
-      font-size: 1.05rem;
-    }
-
-    .donation-highlight {
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      padding: 20px;
-      margin-top: 20px;
-      border-left: 4px solid var(--secondary);
-    }
-
-    .donation-highlight h3 {
-      font-size: 1.3rem;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .donation-highlight .percentage {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--secondary);
-      margin: 10px 0;
-    }
-
-    .features {
-      margin-top: 30px;
-    }
-
-    .feature-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 15px;
-    }
-
-    .feature-item i {
-      color: var(--secondary);
-      margin-top: 3px;
-    }
-
-    /* Right Panel - Calculator */
-    .calculator-panel {
-      padding: 40px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .calculator-header {
-      margin-bottom: 30px;
-    }
-
-    .calculator-header h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
+      margin-bottom: 20px;
       color: var(--dark);
-      margin-bottom: 10px;
+      text-align: center;
     }
 
-    .calculator-header p {
-      color: var(--gray);
-    }
-
-    .input-section {
-      margin-bottom: 30px;
-    }
-
-    .input-group {
-      margin-bottom: 25px;
-    }
-
+    .input-group { margin-bottom: 20px; }
     .input-group label {
       display: block;
-      margin-bottom: 8px;
       font-weight: 500;
+      margin-bottom: 8px;
       color: var(--dark);
     }
 
-    .input-with-icon {
-      position: relative;
-    }
-
+    .input-with-icon { position: relative; }
     .input-with-icon i {
       position: absolute;
-      left: 16px;
+      left: 12px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--gray);
     }
-
     .input-with-icon input {
       width: 100%;
-      padding: 16px 16px 16px 45px;
+      padding: 12px 12px 12px 40px;
       font-size: 1rem;
       border: 1px solid var(--border);
       border-radius: 8px;
-      transition: all 0.3s;
-      background-color: var(--white);
+      transition: all var(--transition);
     }
-
     .input-with-icon input:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
     }
 
-    .currency-selector {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 8px;
-    }
-
-    .currency-selector span {
-      font-size: 0.9rem;
-      color: var(--gray);
-    }
-
-    .currency-flag {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #f1f5f9;
-      font-weight: 600;
-      font-size: 0.8rem;
-      color: var(--dark);
-    }
-
-    /* Results */
-    .results-section {
-      background-color: var(--light-gray);
-      border-radius: 12px;
-      padding: 25px;
-      margin-top: 20px;
-      border: 1px solid var(--border);
-      display: none;
-    }
-
-    .results-section.active {
-      display: block;
-      animation: fadeIn 0.4s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .result-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .result-row:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .result-label {
-      font-weight: 500;
-      color: var(--dark);
-    }
-
-    .result-value {
-      font-weight: 600;
-      font-size: 1.2rem;
-    }
-
-    .donation-result {
-      color: var(--secondary);
-    }
-
-    .remaining-result {
-      color: var(--primary);
-    }
-
-    /* Button */
     .calculate-btn {
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      padding: 18px 30px;
+      width: 100%;
+      padding: 14px;
       font-size: 1rem;
       font-weight: 600;
+      color: var(--white);
+      background-color: var(--primary);
+      border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: all 0.3s;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 10px;
+      transition: all var(--transition);
     }
-
     .calculate-btn:hover {
       background-color: var(--primary-dark);
       transform: translateY(-2px);
       box-shadow: var(--shadow);
     }
 
-    .calculate-btn:active {
-      transform: translateY(0);
+    .results-section {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: var(--light-gray);
+      border-radius: 8px;
+      display: none;
     }
 
-    /* Donation Breakdown */
-    .breakdown-section {
-      margin-top: 30px;
-    }
-
-    .breakdown-header {
+    .result-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
+      font-weight: 500;
     }
 
-    .breakdown-header h3 {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
+    .donation-result { color: var(--secondary); }
+    .remaining-result { color: var(--primary); }
 
     .breakdown-chart {
-      height: 80px;
       display: flex;
-      border-radius: 8px;
+      height: 30px;
+      border-radius: 6px;
       overflow: hidden;
-      margin-bottom: 15px;
+      margin-top: 10px;
     }
-
     .chart-segment {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: width 0.8s ease;
-    }
-
-    .chart-legend {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      color: var(--gray);
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .legend-color {
-      width: 12px;
-      height: 12px;
-      border-radius: 2px;
-    }
-
-    /* Footer */
-    .calculator-footer {
-      margin-top: 30px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      text-align: center;
-      color: var(--gray);
-      font-size: 0.85rem;
+      transition: width 0.5s ease;
     }
 
     /* Developer Credit */
     .developer-credit {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 10px 15px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      color: var(--dark);
-      box-shadow: var(--shadow);
-      z-index: 10;
-      transition: all 0.3s ease;
-      border-left: 3px solid var(--secondary);
+      bottom: 10px;
+      right: 15px;
+      font-size: 0.75rem;
+      color: var(--gray);
     }
-
-    .developer-credit:hover {
-      background-color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    }
-
     .developer-credit a {
       color: var(--primary);
       text-decoration: none;
       font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
-
-    .developer-credit a:hover {
-      color: var(--primary-dark);
-      text-decoration: underline;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 900px) {
-      .calculator-wrapper {
-        grid-template-columns: 1fr;
-      }
-      
-      .info-panel, .calculator-panel {
-        padding: 30px;
-      }
-      
-      .developer-credit {
-        position: static;
-        margin: 20px auto;
-        width: fit-content;
-      }
-    }
-
-    @media (max-width: 576px) {
-      body {
-        padding: 10px;
-      }
-      
-      .info-panel, .calculator-panel {
-        padding: 25px 20px;
-      }
-      
-      .info-content h1 {
-        font-size: 1.7rem;
-      }
-      
-      .donation-highlight .percentage {
-        font-size: 1.8rem;
-      }
-      
-      .breakdown-chart {
-        height: 60px;
-      }
-      
-      .developer-credit {
-        padding: 8px 12px;
-        font-size: 0.75rem;
-      }
-    }
-
-    /* Print Styles */
-    @media print {
-      body {
-        background: white;
-        padding: 0;
-      }
-      
-      .calculator-wrapper {
-        box-shadow: none;
-        grid-template-columns: 1fr;
-      }
-      
-      .calculate-btn {
-        display: none;
-      }
-      
-      .results-section {
-        display: block !important;
-        border: 1px solid #ddd;
-      }
-      
-      .developer-credit {
-        display: none;
-      }
-    }
+    .developer-credit a:hover { color: var(--primary-dark); }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="calculator-wrapper">
-      <!-- Developer Credit -->
-      <div class="developer-credit">
-        <a href="https://m-hasan.vercel.app" target="_blank" rel="noopener noreferrer">
-          <i class="fas fa-code"></i>
-          <span>Developed by M-Hasan</span>
-        </a>
-      </div>
-      
-      <!-- Left Panel: Information -->
-      <div class="info-panel">
-        <div>
-          <div class="logo">
-            <i class="fas fa-hand-holding-heart"></i>
-            <span>CharityCalc Pro</span>
-          </div>
-          
-          <div class="info-content">
-            <h1>Donation Calculator</h1>
-            <p>Calculate your charitable contributions with precision and transparency. This tool helps you understand the impact of your donations.</p>
-            
-            <div class="donation-highlight">
-              <h3><i class="fas fa-percentage"></i> Fixed Donation Rate</h3>
-              <div class="percentage">3%</div>
-              <p>You consistently donate 3% of your income to charitable causes. This calculator helps you determine the exact amount.</p>
-            </div>
-            
-            <div class="features">
-              <div class="feature-item">
-                <i class="fas fa-check-circle"></i>
-                <div>Accurate calculation of charitable contributions</div>
-              </div>
-              <div class="feature-item">
-                <i class="fas fa-chart-line"></i>
-                <div>Visual breakdown of donation impact</div>
-              </div>
-              <div class="feature-item">
-                <i class="fas fa-file-export"></i>
-                <div>Professional reporting for tax documentation</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="info-footer">
-          <p style="font-size: 0.9rem; opacity: 0.8;">© 2023 CharityCalc Pro. All calculations are for informational purposes.</p>
-        </div>
-      </div>
-      
-      <!-- Right Panel: Calculator -->
-      <div class="calculator-panel">
-        <div class="calculator-header">
-          <h2>Calculate Your Contribution</h2>
-          <p>Enter your income amount to calculate your 3% donation</p>
-        </div>
-        
-        <div class="input-section">
-          <div class="input-group">
-            <label for="cost">Income Amount</label>
-            <div class="input-with-icon">
-              <i class="fas fa-money-bill-wave"></i>
-              <input type="number" id="cost" placeholder="Enter amount (e.g., 2700)" min="0" step="0.01">
-            </div>
-            <div class="currency-selector">
-              <div class="currency-flag">৳</div>
-              <span>Bangladeshi Taka (BDT)</span>
-            </div>
-          </div>
-          
-          <button class="calculate-btn" onclick="calculateDonation()">
-            <i class="fas fa-calculator"></i> Calculate Donation
-          </button>
-        </div>
-        
-        <!-- Results Section -->
-        <div class="results-section" id="resultsSection">
-          <div class="result-row">
-            <div class="result-label">Original Income</div>
-            <div class="result-value" id="originalAmount">0.00 BDT</div>
-          </div>
-          <div class="result-row">
-            <div class="result-label">Donation (3%)</div>
-            <div class="result-value donation-result" id="donationAmount">0.00 BDT</div>
-          </div>
-          <div class="result-row">
-            <div class="result-label">Remaining After Donation</div>
-            <div class="result-value remaining-result" id="remainingAmount">0.00 BDT</div>
-          </div>
-        </div>
-        
-        <!-- Breakdown Chart -->
-        <div class="breakdown-section" id="breakdownSection">
-          <div class="breakdown-header">
-            <h3>Donation Breakdown</h3>
-            <span id="breakdownPercentage">0% Donation</span>
-          </div>
-          
-          <div class="breakdown-chart">
-            <div class="chart-segment" id="remainingChart" style="width: 100%; background-color: #3b82f6;"></div>
-            <div class="chart-segment" id="donationChart" style="width: 0%; background-color: #10b981;"></div>
-          </div>
-          
-          <div class="chart-legend">
-            <div class="legend-item">
-              <div class="legend-color" style="background-color: #3b82f6;"></div>
-              <span>Remaining Amount</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-color" style="background-color: #10b981;"></div>
-              <span>Donation (3%)</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="calculator-footer">
-          <p>This calculator provides estimates for informational purposes. Consult with a financial advisor for tax-related decisions.</p>
-        </div>
-      </div>
+
+<div class="calculator-container">
+  <h2>Donation Calculator</h2>
+
+  <div class="input-group">
+    <label for="cost">Income Amount</label>
+    <div class="input-with-icon">
+      <i class="fas fa-money-bill-wave"></i>
+      <input type="number" id="cost" placeholder="Enter amount" min="0" step="0.01">
     </div>
   </div>
 
-  <script>
-    function calculateDonation() {
-      const costInput = document.getElementById('cost');
-      const cost = parseFloat(costInput.value);
-      const resultsSection = document.getElementById('resultsSection');
-      const breakdownSection = document.getElementById('breakdownSection');
-      
-      // Validate input
-      if (isNaN(cost) || cost <= 0) {
-        showError("Please enter a valid income amount");
-        costInput.focus();
-        return;
-      }
-      
-      // Format large numbers with commas
-      const formatCurrency = (value) => {
-        return new Intl.NumberFormat('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        }).format(value);
-      };
-      
-      // Calculate donation
-      const donation = cost * 0.03; // 3%
-      const totalAfterDonation = cost - donation;
-      
-      // Update results
-      document.getElementById('originalAmount').textContent = formatCurrency(cost) + ' BDT';
-      document.getElementById('donationAmount').textContent = formatCurrency(donation) + ' BDT';
-      document.getElementById('remainingAmount').textContent = formatCurrency(totalAfterDonation) + ' BDT';
-      
-      // Show results section
-      resultsSection.classList.add('active');
-      breakdownSection.style.display = 'block';
-      
-      // Update breakdown chart
-      updateBreakdownChart(cost, donation, totalAfterDonation);
+  <button class="calculate-btn" onclick="calculateDonation()">Calculate</button>
+
+  <div class="results-section" id="resultsSection">
+    <div class="result-row">
+      <div>Income</div>
+      <div id="originalAmount">0.00 BDT</div>
+    </div>
+    <div class="result-row">
+      <div>Donation (3%)</div>
+      <div class="donation-result" id="donationAmount">0.00 BDT</div>
+    </div>
+    <div class="result-row">
+      <div>Remaining</div>
+      <div class="remaining-result" id="remainingAmount">0.00 BDT</div>
+    </div>
+
+    <div class="breakdown-chart">
+      <div class="chart-segment" id="remainingChart" style="width:100%;background-color:#3b82f6;"></div>
+      <div class="chart-segment" id="donationChart" style="width:0%;background-color:#10b981;"></div>
+    </div>
+  </div>
+
+  <div class="developer-credit">
+    Developed by <a href="https://m-hasan.vercel.app" target="_blank" rel="noopener noreferrer">Mehedi Hasan</a>
+  </div>
+</div>
+
+<script>
+  function calculateDonation() {
+    const costInput = document.getElementById('cost');
+    const cost = parseFloat(costInput.value);
+    const resultsSection = document.getElementById('resultsSection');
+
+    if(isNaN(cost) || cost <= 0) {
+      alert("Enter a valid income amount");
+      costInput.focus();
+      return;
     }
-    
-    function updateBreakdownChart(cost, donation, remaining) {
-      const donationPercentage = (donation / cost) * 100;
-      const remainingPercentage = 100 - donationPercentage;
-      
-      // Update chart widths with animation
-      setTimeout(() => {
-        document.getElementById('donationChart').style.width = `${donationPercentage}%`;
-        document.getElementById('remainingChart').style.width = `${remainingPercentage}%`;
-        
-        // Update percentage text
-        document.getElementById('breakdownPercentage').textContent = `${donationPercentage.toFixed(1)}% Donation`;
-      }, 100);
-    }
-    
-    function showError(message) {
-      // Create or update error message
-      let errorDiv = document.querySelector('.error-message');
-      if (!errorDiv) {
-        errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.style.cssText = `
-          background-color: #fee2e2;
-          color: #dc2626;
-          padding: 12px 16px;
-          border-radius: 8px;
-          margin-top: 15px;
-          border-left: 4px solid #dc2626;
-          font-weight: 500;
-        `;
-        document.querySelector('.input-section').appendChild(errorDiv);
-      }
-      
-      errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
-      
-      // Remove error after 5 seconds
-      setTimeout(() => {
-        if (errorDiv.parentNode) {
-          errorDiv.parentNode.removeChild(errorDiv);
-        }
-      }, 5000);
-    }
-    
-    // Allow Enter key to trigger calculation
-    document.getElementById('cost').addEventListener('keypress', function(event) {
-      if (event.key === 'Enter') {
-        calculateDonation();
-      }
-    });
-    
-    // Initialize with an example on page load
-    window.onload = function() {
-      document.getElementById('cost').value = 2700;
-      // Focus on input
-      document.getElementById('cost').focus();
-    };
-  </script>
+
+    const formatCurrency = (value) => new Intl.NumberFormat('en-US',{minimumFractionDigits:2, maximumFractionDigits:2}).format(value);
+
+    const donation = cost * 0.03;
+    const remaining = cost - donation;
+
+    document.getElementById('originalAmount').textContent = formatCurrency(cost) + ' BDT';
+    document.getElementById('donationAmount').textContent = formatCurrency(donation) + ' BDT';
+    document.getElementById('remainingAmount').textContent = formatCurrency(remaining) + ' BDT';
+
+    resultsSection.style.display = 'block';
+
+    const donationPercentage = (donation / cost) * 100;
+    document.getElementById('donationChart').style.width = donationPercentage + '%';
+    document.getElementById('remainingChart').style.width = (100 - donationPercentage) + '%';
+  }
+
+  document.getElementById('cost').addEventListener('keypress', function(event) {
+    if(event.key === 'Enter') calculateDonation();
+  });
+</script>
+
 </body>
 </html>
